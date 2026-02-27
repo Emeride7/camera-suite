@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Camera Suite — Maintenance & Facturation</title>
+  <link rel="stylesheet" href="./assets/css/shared.css" />
+  <style>
+    .hero{ padding:28px; }
+    .grid{
+      display:grid; gap:16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .card{
+      background:#fff; border-radius:16px; padding:18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .card h2{ margin:0 0 8px; }
+    .card p{ margin:0 0 14px; color: var(--muted); line-height:1.45; }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    @media (max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="./">Camera Suite</a>
+      <nav class="nav">
+        <a class="nav__link" href="./maintenance/">Maintenance</a>
+        <a class="nav__link" href="./proforma/">Pro Forma / Facture</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container hero">
+    <div class="stack">
+      <h1 class="title">Mini suite professionnelle (100% HTML/CSS/JS)</h1>
+      <p class="subtitle">
+        2 applications front-end prêtes pour GitHub Pages : gestion de maintenance caméras + génération Pro Forma / Facture.
+      </p>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Maintenance caméras</h2>
+          <p>CRUD caméras, listes configurables, statistiques, sauvegarde automatique, génération d’un ID de rapport RM-YYYY-XXX.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="./maintenance/">Ouvrir Maintenance</a>
+            <span class="pill">Transfert vers Pro Forma</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Pro Forma / Facture</h2>
+          <p>Modes PF/F, numérotation, logo, historique, autosave, export PDF/Excel. Peut recevoir des lignes depuis la maintenance.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="./proforma/">Ouvrir Pro Forma</a>
+            <span class="pill">PDF + Excel</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top:16px;">
+        <h2 style="margin-top:0;">Conseil portfolio</h2>
+        <p style="margin-bottom:0;">
+          Ajoute une capture d’écran, une courte démo GIF, et décris l’architecture (modules ES + localStorage + exports).
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>© <span id="year"></span> Camera Suite</span>
+      <span class="muted">Déploiement : GitHub Pages</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+  </script>
+</body>
+</html>

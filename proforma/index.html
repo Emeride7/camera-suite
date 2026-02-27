@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pro Forma / Facture — Camera Suite</title>
+
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <link rel="stylesheet" href="./css/proforma.css" />
+
+  <!-- Export libs (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../">Camera Suite</a>
+      <nav class="nav">
+        <a class="nav__link" href="../maintenance/">Maintenance</a>
+        <a class="nav__link" href="../proforma/">Pro Forma / Facture</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pf container">
+    <!-- Toolbar -->
+    <section class="toolbar" aria-label="Barre d'actions">
+      <div class="modes" role="tablist" aria-label="Type de document">
+        <button type="button" class="modeBtn active" id="btnProforma" role="tab" aria-selected="true">PRO FORMA</button>
+        <button type="button" class="modeBtn" id="btnFacture" role="tab" aria-selected="false">FACTURE</button>
+      </div>
+
+      <div class="toolbar__actions">
+        <button type="button" class="tbtn" id="btnHistory">Historique</button>
+        <button type="button" class="tbtn" id="btnArchive">Sauvegarder</button>
+        <button type="button" class="tbtn tbtn--ghost" id="btnNew">Nouveau</button>
+        <button type="button" class="tbtn tbtn--ok" id="btnPdf">PDF</button>
+        <button type="button" class="tbtn tbtn--ok" id="btnExcel">Excel</button>
+      </div>
+    </section>
+
+    <section class="card" id="invoiceCard" aria-label="Document">
+      <header class="card__header">
+        <div class="left">
+          <div class="logoBox">
+            <img id="logoPreview" alt="Logo" />
+            <div class="logoPlaceholder" id="logoPlaceholder">Cliquer<br>pour logo</div>
+            <input type="file" id="logoUpload" accept="image/*" class="logoInput" aria-label="Importer un logo" />
+          </div>
+
+          <div class="emit">
+            <input class="hinput bold" id="emitterName" placeholder="Nom de l'entreprise" autocomplete="organization" />
+            <input class="hinput" id="emitterAddress" placeholder="Adresse" autocomplete="street-address" />
+            <input class="hinput" id="emitterExtra" placeholder="Complément d'adresse" />
+            <input class="hinput" id="emitterTel" placeholder="Téléphone" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="docTitle" id="docTitle">PRO FORMA</div>
+          <div class="refGrid">
+            <label class="rfield">
+              <span>N°</span>
+              <input class="rinput" id="docNumber" placeholder="N° de document" />
+            </label>
+            <label class="rfield">
+              <span>Date</span>
+              <input class="rinput" id="docDate" type="date" />
+            </label>
+          </div>
+        </div>
+      </header>
+
+      <div class="card__body">
+        <div class="sectionTitle">Destinataire</div>
+        <div class="clientBox">
+          <div class="clientLabel" id="clientSectionLabel">CLIENT</div>
+          <div class="clientGrid">
+            <input class="input full" id="clientName" placeholder="Nom du client" autocomplete="name" />
+            <input class="input" id="clientAddress" placeholder="Adresse" autocomplete="street-address" />
+            <input class="input" id="clientExtra" placeholder="Complément d'adresse" />
+            <input class="input" id="clientIfu" placeholder="IFU (optionnel)" />
+          </div>
+        </div>
+
+        <div class="sectionTitle">Détail des prestations</div>
+
+        <div class="tableWrap" aria-label="Lignes">
+          <table class="itemsTable">
+            <thead>
+              <tr>
+                <th style="width:45%">Description</th>
+                <th style="width:12%; text-align:right;">Quantité</th>
+                <th style="width:18%; text-align:right;">Prix unitaire HT</th>
+                <th style="width:18%; text-align:right;">Total HT</th>
+                <th style="width:7%"></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+
+        <button class="addRow" id="addRow" type="button">Ajouter une ligne</button>
+
+        <div class="totals">
+          <div class="controls">
+            <label class="inline">
+              <span>TVA (%)</span>
+              <input id="vatRate" type="number" min="0" step="0.1" value="18" inputmode="decimal" />
+            </label>
+            <label class="inline">
+              <span>Devise</span>
+              <input id="currency" type="text" value="CFA" maxlength="10" />
+            </label>
+          </div>
+
+          <div class="totalsBox" aria-label="Totaux">
+            <div class="row"><span>Sous-total HT</span><strong><span id="subtotal">0,00</span> <span class="curr">CFA</span></strong></div>
+            <div class="row" id="vatRow"><span>TVA (<span id="vatRateDisplay">18</span>%)</span><strong><span id="totalTax">0,00</span> <span class="curr">CFA</span></strong></div>
+            <div class="row grand"><span>Total TTC</span><strong><span id="grandTotal">0,00</span> <span class="curr">CFA</span></strong></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="card__footer">
+        <div class="sig">
+          <div class="sigLabel">Signature</div>
+          <div class="sigLine">Nom &amp; Cachet</div>
+        </div>
+        <div class="fnote">
+          <div>Document généré automatiquement</div>
+          <div id="footerBrand" class="fbrand">Votre entreprise</div>
+        </div>
+      </footer>
+    </section>
+
+    <p class="muted" style="text-align:center; margin:10px 0 0;">Autosave activé (localStorage)</p>
+  </main>
+
+  <!-- History panel -->
+  <div class="overlay" id="historyOverlay" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" aria-label="Historique">
+      <header class="panel__header">
+        <span>Historique des documents</span>
+        <button type="button" id="btnCloseHistory" aria-label="Fermer">✕</button>
+      </header>
+      <div class="panel__tools">
+        <input type="search" id="historySearch" placeholder="Rechercher (n°, client, date…)" />
+      </div>
+      <div class="panel__list" id="historyList"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Datalists -->
+  <datalist id="clientDatalist"></datalist>
+  <datalist id="itemDatalist"></datalist>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

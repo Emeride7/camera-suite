@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maintenance — Camera Suite</title>
+  <link rel="stylesheet" href="../assets/css/shared.css" />
+  <link rel="stylesheet" href="./css/maintenance.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../">Camera Suite</a>
+      <nav class="nav">
+        <a class="nav__link" href="../maintenance/">Maintenance</a>
+        <a class="nav__link" href="../proforma/">Pro Forma / Facture</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container maint">
+    <div class="maint__header">
+      <div>
+        <h1 class="title">Gestionnaire de Maintenance des Caméras</h1>
+        <p class="subtitle">Données sauvegardées localement (localStorage). Rapport identifié (RM-YYYY-XXX).</p>
+      </div>
+
+      <div class="reportbar" aria-label="Rapport">
+        <div class="reportbar__item">
+          <div class="label">Rapport</div>
+          <div class="value" id="reportId">—</div>
+        </div>
+        <div class="reportbar__item">
+          <div class="label">Date</div>
+          <input id="reportDate" type="date" class="input" />
+        </div>
+        <button class="btnAction btnAction--ghost" id="btnNewReport" type="button">Nouveau rapport</button>
+        <button class="btnAction btnAction--primary" id="btnSendToProforma" type="button">
+          Envoyer vers Pro Forma
+        </button>
+      </div>
+    </div>
+
+    <section class="maint__grid">
+      <!-- Left panel -->
+      <aside class="panel">
+        <h2 class="panel__title">Ajouter / Modifier caméra</h2>
+
+        <form id="cameraForm" class="form" autocomplete="off">
+          <input type="hidden" id="cameraId" />
+
+          <label class="field">
+            <span>Nom de la caméra</span>
+            <input class="input" id="cameraName" required placeholder="ex: Caméra 1" />
+          </label>
+
+          <label class="field">
+            <span>Emplacement</span>
+            <select class="input" id="emplacement" required></select>
+          </label>
+
+          <label class="field">
+            <span>État</span>
+            <select class="input" id="etat" required>
+              <option value="Bon">Bon</option>
+              <option value="Pas Bon">Pas Bon</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Problème identifié</span>
+            <select class="input" id="probleme"></select>
+          </label>
+
+          <label class="field">
+            <span>Actions recommandées</span>
+            <select class="input" id="action"></select>
+          </label>
+
+          <button class="btnAction btnAction--primary" type="submit">Enregistrer</button>
+          <button class="btnAction btnAction--ghost" id="btnCancelEdit" type="button" hidden>Annuler édition</button>
+        </form>
+
+        <div class="config">
+          <h3 class="config__title">Configuration des listes</h3>
+
+          <div class="config__row">
+            <input class="input" id="newEmplacement" placeholder="Nouvel emplacement (ex: Toit)" />
+            <button class="btnAction btnAction--ghost" id="btnAddEmplacement" type="button">+</button>
+          </div>
+
+          <div class="config__row">
+            <input class="input" id="newProbleme" placeholder="Nouveau problème" />
+            <button class="btnAction btnAction--ghost" id="btnAddProbleme" type="button">+</button>
+          </div>
+
+          <div class="config__row">
+            <input class="input" id="newAction" placeholder="Nouvelle action" />
+            <button class="btnAction btnAction--ghost" id="btnAddAction" type="button">+</button>
+          </div>
+
+          <button class="btnAction btnAction--danger" id="btnReset" type="button">Réinitialiser (défaut)</button>
+        </div>
+      </aside>
+
+      <!-- Right -->
+      <section class="panel">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__label">TOTAL</div>
+            <div class="stat__value" id="totalCameras">0</div>
+          </div>
+          <div class="stat stat--ok">
+            <div class="stat__label">FONCTIONNELLES</div>
+            <div class="stat__value" id="totalBon">0</div>
+          </div>
+          <div class="stat stat--bad">
+            <div class="stat__label">NON FONCTIONNELLES</div>
+            <div class="stat__value" id="totalPasBon">0</div>
+          </div>
+        </div>
+
+        <div class="tableWrap" aria-label="Tableau caméras">
+          <table class="table" id="camerasTable">
+            <thead>
+              <tr>
+                <th>Caméra</th>
+                <th>Emplacement</th>
+                <th>État</th>
+                <th>Problème</th>
+                <th>Action</th>
+                <th style="width:130px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="camerasTbody"></tbody>
+          </table>
+        </div>
+
+        <p class="hint">Astuce : clique “Envoyer vers Pro Forma” pour générer des lignes à partir des caméras “Pas Bon”.</p>
+      </section>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
